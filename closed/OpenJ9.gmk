@@ -433,7 +433,7 @@ build-j9vm : run-preprocessors-j9
 
 J9JCL_SOURCES_DONEFILE := $(J9JCL_SOURCES_DIR)/j9jcl.done
 
-recur_wildcard = $(foreach dir,$(wildcard $1/*),$(call recur_wildcard,$(dir),$2) $(filter $(subst *,%,$2),$(dir)))
+RecursiveWildcard = $(foreach dir,$(wildcard $1/*),$(call RecursiveWildcard,$(dir),$2) $(filter $(subst *,%,$2),$(dir)))
 JppSourceDirs := $(OPENJ9_TOPDIR)/jcl/src
 JppSourceDirs += $(TOPDIR)/closed/adds/jdk/src
 
@@ -475,7 +475,7 @@ endef # RunJPP
 IncludeIfUnsure := -includeIfUnsure -noWarnIncludeIf
 
 $(J9JCL_SOURCES_DONEFILE) : \
-		$(foreach dir, $(JppSourceDirs), $(call RecursiveWildcard,$(dir),*.java))
+		$(foreach dir, $(JppSourceDirs), $(call recur_wildcard,$(dir),*.java))
 	@$(ECHO) Building OpenJ9 Java Preprocessor
 	@$(MKDIR) -p $(J9TOOLS_DIR)
 	$(MAKE) $(MAKE_ARGS) -C $(OPENJ9_TOPDIR)/sourcetools -f buildj9tools.mk \
